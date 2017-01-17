@@ -1,3 +1,5 @@
 export { Login } from './Login'
 export { PostList } from './PostList'
 export { Counter } from './Counter'
+export { FourOFourClass } from './404'
+export { NavbBar } from './NavBar'

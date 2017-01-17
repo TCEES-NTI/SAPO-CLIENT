@@ -1,14 +1,23 @@
-import { LOGIN } from '../utils/consts'
+import { LOGIN, SET_LOGIN_ATTRIBUTE } from '../utils/consts'
 
 const initialState = {
-  token: ''
+  token: '',
+  registering: false,
+  username: '',
+  fullname: '',
+  email: '',
+  password: '',
+  password2: ''
 }
 
 export function loginReducer(state = initialState, action) {
   let modifications = {}
   if(action.type === LOGIN) {
     modifications = Object.assign(modifications, { token: action.value })
+  } else if (action.type === SET_LOGIN_ATTRIBUTE) {
+    var mutate = {}
+    mutate[action.attributeName] = action.value
+    modifications = Object.assign(modifications, mutate)
   }
-  console.log(modifications)
-  return Object.keys(modifications).length ? modifications : state
+  return Object.keys(modifications).length ? Object.assign({}, state, modifications) : state
 }

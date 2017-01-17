@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './PostList.css'
 import { PageHeader } from 'react-bootstrap';
+import { NavbBar } from './'
 
 class PostList extends Component {
   constructor() {
@@ -26,13 +27,16 @@ class PostList extends Component {
   render() {
     return (
       <div className="PostList">
-        <PageHeader>Post List</PageHeader>
-        {this.state.posts.map(post => (
-          <div className="PostDiv" key={post.id}>
-            <h2 className="PostTitle">{post.title}</h2>
-            <p className="PostBody">{post.body}</p>
-          </div>
-        ))}
+        <NavbBar/>
+          <div className="PostList">
+          <PageHeader>Post List</PageHeader>
+            {this.state.posts.map(post => (
+              <div className="PostDiv" key={post.id}>
+                <h2 className="PostTitle">{post.title}</h2>
+                <p className="PostBody">{post.body}</p>
+              </div>
+            ))}
+        </div>
       </div>
     );
   }

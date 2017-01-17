@@ -10,9 +10,9 @@ export const UserService = {
   signup (data) {
     return FetchApi('singup', {
         username: data.username,
-        name: data.username,
-        email: data.username,
-        password: data.password  
+        name: data.name,
+        email: data.email,
+        password: data.password
       }, "POST")
   }
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { INCREASE, DECREASE } from '../utils/consts'
+import { NavbBar } from './'
 
 function increase(n) {
   return {
@@ -22,12 +23,17 @@ class CounterClass extends Component {
     let { number, increase, decrease } = this.props
     return (
       <div>
-        Some state changes:
-        { number }
-        <button onClick={() => increase(1)}>Increase</button>
-        <button onClick={() => decrease(1)}>Decrease</button>
-        <br/>
-        <Link className="btn button btn-default" to="/">Home</Link>
+        <NavbBar/>
+        <div className="CounterContent">
+          <Link to="/login">Login</Link>
+          <Link to="/post-list">Post List</Link>
+          Some state changes:
+          { number }
+          <button onClick={() => increase(1)}>Increase</button>
+          <button onClick={() => decrease(1)}>Decrease</button>
+          <br/>
+          <Link className="btn button btn-default" to="/">Home</Link>
+        </div>
       </div>
     )
   }

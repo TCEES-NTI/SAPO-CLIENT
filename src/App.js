@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
-import { Router, Route, browserHistory } from 'react-router'
+import { Router, Route, browserHistory, IndexRoute  } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
-import { Login, PostList, Counter } from './components'
+import { Login, PostList, Counter, FourOFourClass, NavbBar } from './components'
 
 import './App.css'
 
@@ -17,6 +17,25 @@ const store = createStore(
   })
 )
 
+function redirectLogin (nextState, replace) {
+  var token = store.getState().loginReducer.token
+  if (!token.length) {
+    replace({
+      pathname: '/login'
+    })
+  }
+}
+
+function redirectDefault (nextState, replace) {
+  var token = store.getState().loginReducer.token
+  console.log(store.getState())
+  if (token.length) {
+    replace({
+      pathname: '/'
+    })
+  }
+}
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 class App extends Component {
@@ -25,9 +44,10 @@ class App extends Component {
       <div className="App">
         <Provider store={store}>
           <Router history={history}>
-            <Route path="/" component={Login} />
-            <Route path="/foo" component={PostList}/>
-            <Route path="/bar" component={Counter}/>
+            <Route path="/" component={Counter} onEnter={redirectLogin}/>
+            <Route path="login" component={Login} onEnter={redirectDefault} />
+            <Route path="post-list" component={PostList} onEnter={redirectLogin}/>
+            <Route path="/*" component={FourOFourClass}/>
           </Router>
         </Provider>
       </div>

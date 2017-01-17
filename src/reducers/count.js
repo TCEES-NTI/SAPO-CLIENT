@@ -12,6 +12,5 @@ export function countReducer(state = initialState, action) {
   else if(action.type === DECREASE) {
     modifications = Object.assign(modifications, { number: state.number - action.amount })
   }
-  console.log(modifications)
   return Object.keys(modifications).length ? modifications : state
 }
