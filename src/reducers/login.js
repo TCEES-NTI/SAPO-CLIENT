@@ -3,10 +3,10 @@ import { LOGIN, SET_LOGIN_ATTRIBUTE } from '../utils/consts'
 const initialState = {
   token: '',
   registering: false,
-  username: '',
+  username: 'lucianopf',
   fullname: '',
   email: '',
-  password: '',
+  password: '123456',
   password2: ''
 }
 

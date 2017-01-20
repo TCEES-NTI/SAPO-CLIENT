@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import './Login.css'
 import { Button, PageHeader, FormGroup, ControlLabel, FormControl, HelpBlock} from 'react-bootstrap';
-import { UserService } from '../services/User'
-import { Link } from 'react-router'
+import { UserService } from '../services'
 import { connect } from 'react-redux'
 import { LOGIN, SET_LOGIN_ATTRIBUTE } from '../utils/consts'
 import { browserHistory } from 'react-router'
@@ -90,10 +89,8 @@ class LoginClass extends Component {
  
   render() {
     let { 
-      token, 
       registering, 
       username, 
-      dispatch, 
       fullname,
       email, 
       password, 
@@ -163,7 +160,6 @@ class LoginClass extends Component {
               </div>
             }
           </form>
-          <Link to="/post-list">Counter</Link>
         </div>
       </div>
     );

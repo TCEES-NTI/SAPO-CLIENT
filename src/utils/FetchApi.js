@@ -7,6 +7,7 @@ function urlEncode (data) {
 }
 
 export function FetchApi (url, payload, method, token) {
+  console.log("Resquest", method, url)
   let requestPayload = {
     method: method,
     headers: {
@@ -24,10 +25,17 @@ export function FetchApi (url, payload, method, token) {
   }
   return fetch(config.apiUrl + url, requestPayload)
     .then((res) => {
-       setTimeout(() => null, 0);
+      setTimeout(() => null, 0);
       return res.json()
     })
+    .then((res) => {
+      if (res.message === 'Token has expired, please login again.') {
+        alert('A sua sessão expirou, por favor, faça o login novamente.')
+      } else {
+        return res
+      }
+    })
     .catch(err => {
-      throw err
+      return FetchApi(url, payload, method, token)
     })
 }

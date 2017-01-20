@@ -1,10 +1,24 @@
 import React, { Component } from 'react'
-import { Navbar, Nav, NavDropdown, MenuItem, NavItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
+import { LinkContainer } from 'react-router-bootstrap'
+import { LOGIN } from '../utils/consts'
+import { browserHistory } from 'react-router'
 
+function setLogout () {
+  return {
+    type: LOGIN,
+    value: ''
+  }
+}
 
 class NavbBarClass extends Component {
+  logout = () => {
+    this.props.dispatch(setLogout())
+    browserHistory.replace("/login")
+  }
+
   render() {
     return (
       <div className="NavBar">
@@ -17,24 +31,31 @@ class NavbBarClass extends Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              <NavItem>
-                <Link to="/">Início</Link>
-              </NavItem>
-              <NavItem>
-                <Link to="/post-list">Post List</Link>
-              </NavItem>
+              <LinkContainer to="/">
+                <NavItem eventKey={1}>Início</NavItem>
+              </LinkContainer>
+              <LinkContainer to="/avaliacoes">
+                <NavItem eventKey={2}>Avaliacoes</NavItem>
+              </LinkContainer>
+              <LinkContainer to="/criar-avaliacao">
+                <NavItem eventKey={3}>Criar Avaliação</NavItem>
+              </LinkContainer>
+              <LinkContainer to="/indicadores">
+                <NavItem eventKey={4}>Indicadores</NavItem>
+              </LinkContainer>
+              <LinkContainer to="/post-list">
+                <NavItem eventKey={5}>Post List</NavItem>
+              </LinkContainer>
             </Nav>
             <Nav pullRight>
               {
                 !this.props.token.length ? 
                 (
-                  <NavItem>
-                    <Link to="/login">Login</Link>
-                  </NavItem>
+                  <LinkContainer to="/login">
+                    <NavItem eventKey={3}>Login</NavItem>
+                  </LinkContainer>
                 ) : (
-                  <NavItem>
-                    <Link to="/logout">Logout</Link>
-                  </NavItem>
+                  <NavItem eventKey={3} onClick={this.logout}>Logout</NavItem>
                 )
               }
             </Nav>
