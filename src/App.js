@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
-import { Login, PostList, Dashboard, FourOFourClass, Avaliacoes, CriarAvaliacao, Indicadores } from './components'
+import { Login, Dashboard, FourOFourClass, Avaliacoes, CriarAvaliacao, Indicadores, Avaliacao, ObjetoAvaliacao } from './components'
 
 import './App.css'
 
@@ -46,8 +46,9 @@ class App extends Component {
           <Router history={history}>
             <Route path="/" component={Dashboard} onEnter={redirectLogin}/>
             <Route path="login" component={Login} onEnter={redirectDefault} />
-            <Route path="post-list" component={PostList} onEnter={redirectLogin}/>
             <Route path="avaliacoes" component={Avaliacoes} onEnter={redirectLogin}/>
+            <Route path="avaliacoes/:avaliacaoId" component={Avaliacao} onEnter={redirectLogin}/>
+            <Route path="avaliacoes/:avaliacaoId/objetoAvaliacao/:objetoAvaliacaoId" component={ObjetoAvaliacao} onEnter={redirectLogin}/>
             <Route path="criar-avaliacao" component={CriarAvaliacao} onEnter={redirectLogin}/>
             <Route path="indicadores" component={Indicadores} onEnter={redirectLogin}/>
             <Route path="/*" component={FourOFourClass}/>

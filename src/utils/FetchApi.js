@@ -36,6 +36,7 @@ export function FetchApi (url, payload, method, token) {
       }
     })
     .catch(err => {
+      console.log('Mensagem:', err.message)
       return FetchApi(url, payload, method, token)
     })
 }

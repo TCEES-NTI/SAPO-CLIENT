@@ -14,5 +14,14 @@ export const UserService = {
         email: data.email,
         password: data.password
       }, "POST")
+  },
+  getAllUsername (token) {
+    return FetchApi('username', {}, 'GET', token)
+      .then((res) => {
+        if (!res.length) {
+          throw new Error('Não há token ou não existem indicadores')
+        }
+        return res
+      })
   }
 }

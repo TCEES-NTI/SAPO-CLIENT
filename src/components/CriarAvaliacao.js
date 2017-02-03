@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
 import { NavbBar } from './'
 import { connect } from 'react-redux'
-import { } from '../utils/consts'
-import { IndicadorService, EntidadeService, ItemService } from '../services'
+import { IndicadorService, EntidadeService, ItemService, UserService, AvaliacaoService } from '../services'
 import { PageHeader, FormGroup, FormControl, ControlLabel, Grid, Row, Col, Button, Table, Checkbox } from 'react-bootstrap'
+import { browserHistory } from 'react-router'
 
 const style = {
   fivePercent : {
     width: '5%',
-    'text-align': 'center' 
+    'textAlign': 'center' 
   },
   fifteenPercent : {
     width: '10%'
@@ -32,7 +32,10 @@ class CriarAvaliacaoClass extends Component {
       entidades: [],
       selectedEntidades: {},
       itens: [],
-      filteredItens: []
+      filteredItens: [],
+      users: [],
+      selectedUsers: [],
+      loading: false
     }
   }
   
@@ -56,7 +59,13 @@ class CriarAvaliacaoClass extends Component {
         if (res.length) {
           this.setState({itens: res})
           this.filterItens(this.state.itens, this.state.selectIndicador)
-        }         
+        }
+        return UserService.getAllUsername(this.props.token)         
+      })
+      .then((res) => {
+        if (res.length) {
+          this.setState({users: res})
+        }
       })
       .catch((err) => console.log(err))
   }
@@ -86,7 +95,7 @@ class CriarAvaliacaoClass extends Component {
     return this.setState({ selectedEntidades: mutate })
   }
 
-  clearSelection = (e) => {
+  clearEntidadesSelection = (e) => {
     let select = findDOMNode(this.refs[e.target.getAttribute("data-key")])
     ;[].forEach.call(select, (option) => {
       option.selected = false
@@ -95,9 +104,17 @@ class CriarAvaliacaoClass extends Component {
     mutate[e.target.getAttribute("data-key")] = []
     return this.setState({ selectedEntidades: mutate })
   }
-  
+
+  setItensSelection = (variation) => {
+    let newFilteredItens = this.state.filteredItens.map((item) => {
+      item.selected = variation
+      return item
+    })
+    return this.setState({ filteredItens: newFilteredItens })
+  }
+
   toggleItem = (e) => {
-    console.log('Aqui', e.target.getAttribute("data-key"))
+    console.log('Aqui', e.target, e.target.getAttribute("data-key"))
     let mutate = this.state.filteredItens.map((item) => {
       if (item._id === e.target.getAttribute("data-key")) {
         item.selected = !item.selected
@@ -107,7 +124,29 @@ class CriarAvaliacaoClass extends Component {
     return this.setState({ filteredItens: mutate })
   }
 
-  toggleItemTest = (e) => null
+  selectUsers = (e) => {
+    var mutate = this.state.selectedEntidades
+    mutate = [].filter.call(e.target.options, (option) => option.selected).map((option) => option.value)
+    return this.setState({ selectedUsers: mutate })
+  }
+
+  createAvaliacao = () => {
+    this.setState({ loading: true })
+    return AvaliacaoService.create(this.props.token, {
+      indicador: this.state.selectedIndicador,
+      nome: this.state.nome,
+      objetivos: this.state.objetivos,
+      observacoes: this.state.observacoes,
+      entidades: this.state.selectedEntidades,
+      itens: this.state.filteredItens,
+      usuarios: this.state.selectedUsers
+    })
+      .then((res) => {
+        console.log(res)
+        this.setState({ loading: false })
+        browserHistory.replace("/")
+      })
+  }
 
   render() {
     let poderesEntidades = this.state.entidades.reduce((result, actual) => {
@@ -182,10 +221,10 @@ class CriarAvaliacaoClass extends Component {
                         </FormControl>
                         <Button 
                           bsStyle="danger" 
-                          onClick={this.clearSelection} 
+                          onClick={this.clearEntidadesSelection} 
                           bsSize="small" 
                           data-key={ poder ? poder : 'Outros'} 
-                          block>Limpar Seleção</Button>
+                          block>Limpar seleção</Button>
                       </FormGroup>
                     </Col>
                   )
@@ -200,6 +239,26 @@ class CriarAvaliacaoClass extends Component {
                   .map((indicador) => (<span key={indicador._id}>{indicador.nome}</span>))
               }
             </ControlLabel>
+            <Grid fluid={true}>
+              <Row className="show-grid">
+                <Col sm={12} md={6}>
+                  <Button 
+                    bsStyle="danger" 
+                    onClick={(e) => this.setItensSelection(false)} 
+                    bsSize="small" 
+                    block>Desselecionar todos itens</Button>
+
+                </Col>
+                <Col sm={12} md={6}>
+                  <Button 
+                    bsStyle="success" 
+                    onClick={(e) => this.setItensSelection(true)} 
+                    bsSize="small" 
+                    block>Selecionar todos itens</Button>
+                </Col>
+              </Row>
+            </Grid>
+            <br/>
             <Table responsive striped bordered condensed hover>
               <thead>
                 <tr>
@@ -215,18 +274,19 @@ class CriarAvaliacaoClass extends Component {
                     return (
                       <tr 
                         key={item._id}
-                        onChange={this.toggleItem}
-                        data-key={item._id}>
-                        <td>{item.nome}</td>
-                        <td>{item.exigencia}</td>
-                        <td>{item.notaMaxima}</td>
-                        <td style={style.fivePercent}>
-                          <FormGroup>
+                        onClick={this.toggleItem}
+                        data-key={item._id}
+                        className={item.selected ? "success" : "default"}>
+                        <td data-key={item._id}>{item.nome}</td>
+                        <td data-key={item._id}>{item.exigencia}</td>
+                        <td data-key={item._id}>{item.notaMaxima}</td>
+                        <td style={style.fivePercent} data-key={item._id}>
+                          <FormGroup data-key={item._id}>
                             <Checkbox 
                               inline 
                               data-key={item._id} 
                               checked={item.selected}
-                              onChange={this.toggleItemTest}/>
+                              onChange={() => {return}}/>
                           </FormGroup>
                         </td>
                       </tr>
@@ -235,6 +295,31 @@ class CriarAvaliacaoClass extends Component {
                 }
               </tbody>
             </Table>
+            <FormGroup controlId="formControlsSelectMultiple">
+              <ControlLabel>Usuarios avaliadores</ControlLabel>
+              <FormControl 
+                componentClass="select" 
+                multiple size="10"
+                onChange={this.selectUsers}>
+                {
+                  this.state.users
+                    .map((user) => {
+                      return (
+                        <option value={user._id} key={user._id}>{user.username} - {user.name}</option>
+                      )
+                    })
+                }
+              </FormControl>
+            </FormGroup>
+            <Button 
+              bsStyle="success" 
+              onClick={(e) => this.createAvaliacao()} 
+              bsSize="large" 
+              block
+              disabled={this.state.loading}>
+              <span>Criar avaliação</span>
+            </Button>
+            <br/>
           </form>
         </div>
       </div>

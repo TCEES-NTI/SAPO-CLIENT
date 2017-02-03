@@ -61,7 +61,7 @@ class LoginClass extends Component {
       browserHistory.replace("/")
     })
     .catch(err => {
-      console.warn('Invalid login provided.', err)  
+      alert('Invalid login provided.')  
     })
   }
 

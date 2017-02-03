@@ -43,9 +43,6 @@ class NavbBarClass extends Component {
               <LinkContainer to="/indicadores">
                 <NavItem eventKey={4}>Indicadores</NavItem>
               </LinkContainer>
-              <LinkContainer to="/post-list">
-                <NavItem eventKey={5}>Post List</NavItem>
-              </LinkContainer>
             </Nav>
             <Nav pullRight>
               {
