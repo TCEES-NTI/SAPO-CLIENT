@@ -2,13 +2,18 @@ import React, { Component } from 'react'
 import { NavbBar } from './'
 import { } from 'react-bootstrap';
 import { connect } from 'react-redux'
-import { ObjetoAvaliacaoService } from '../services'
-import { Button, Table } from 'react-bootstrap'
+import { ObjetoAvaliacaoService, NotaService } from '../services'
+import { Button, Table, Grid, Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
+import { saveData } from '../utils/DataExport'
 
 const style = {
   tenPercent : {
     width: '10%',
+    'textAlign': 'center' 
+  },
+  fifteenPercent : {
+    width: '15%',
     'textAlign': 'center' 
   },
   fivePercent : {
@@ -17,6 +22,9 @@ const style = {
   },
   twentyPercent : {
     width: '20%'
+  },
+  'margin-left': {
+    marginLeft: '5px'
   }
 }
 
@@ -40,14 +48,60 @@ class AvaliacaoClass extends Component {
       .catch((err) => console.log(err))
   }
 
+  exportAvaliacao = (id) => {
+    NotaService.getPopulatedCsv(this.props.token, id)
+      .then(res => {
+        saveData(res, 'avaliacao.csv')
+      })
+      .catch(err => console.log(err))
+  }
+
+  exportAvaliacoes = () => {
+    return Promise.all(this.state.objetosAvaliacoes.map(objetoAvaliacao => {
+        return NotaService.getPopulatedCsv(this.props.token, objetoAvaliacao._id)
+      }))
+      .then(res => {
+        console.log('DEI CERTO!')
+        let completeResponse = res.reduce((result, actual) => {
+          return result.concat(actual)
+        }, '')
+        saveData(completeResponse, 'avaliacao.csv')
+      })
+      .catch(err => console.log(err))
+  }
+
+  getNomeAvaliacao = () => {
+    if ( this.state.objetosAvaliacoes.length ) {
+      return (
+        <h1>Avaliação > {this.state.objetosAvaliacoes[0].avaliacao.nome}</h1>
+      )
+    } else {
+      return (
+        <h1>Avaliação > Carregando</h1>
+      )
+    }
+  }
+
   render() {
     return (
       <div className="Login">
         <NavbBar/>
         <div className="content">
           <header>
-            <h1>Avaliação</h1>
-            <h2>{this.props.params.objetoAvaliacaoId}</h2>
+          <Grid fluid>
+            <Row className="show-grid">
+              <Col xs={12} md={9}>
+                { this.getNomeAvaliacao() }
+              </Col>
+              <Col xs={12} md={3}>
+                <Button 
+                  bsStyle="link" 
+                  onClick={(e) => this.exportAvaliacoes()}>
+                  Exportar todas entidades como CSV
+                </Button>
+              </Col>
+            </Row>
+          </Grid>
           </header>
           <section>
           <Table responsive>
@@ -57,7 +111,7 @@ class AvaliacaoClass extends Component {
                 <th>Observacoes</th>
                 <th style={style.tenPercent}>Resultado</th>
                 <th style={style.fivePercent}>Completude(%)</th>
-                <th style={style.tenPercent}>Ações</th>
+                <th style={style.fifteenPercent}>Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -69,10 +123,16 @@ class AvaliacaoClass extends Component {
                       <td>{objetoAvaliacao.observacoes}</td>
                       <td style={style.tenPercent}>{objetoAvaliacao.resultado} / {objetoAvaliacao.notaMaxima}</td>
                       <td style={style.fivePercent}>{objetoAvaliacao.completude} %</td>
-                      <td style={style.tenPercent}>
+                      <td style={style.fifteenPercent}>
                         <LinkContainer to={`/avaliacoes/${this.props.params.avaliacaoId}/objetoAvaliacao/${objetoAvaliacao._id}`}>
-                          <Button bsStyle="primary">Editar</Button>
+                          <Button bsStyle="primary">Avaliar</Button>
                         </LinkContainer>
+                        <Button 
+                          bsStyle="warning" 
+                          style={style['margin-left']} 
+                          onClick={(e) => this.exportAvaliacao(objetoAvaliacao._id)}>
+                          Exportar
+                        </Button>
                       </td>
                     </tr>
                   )

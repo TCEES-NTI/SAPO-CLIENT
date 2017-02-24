@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
-import { Login, Dashboard, FourOFourClass, Avaliacoes, CriarAvaliacao, Indicadores, Avaliacao, ObjetoAvaliacao } from './components'
+import { Login, Dashboard, FourOFourClass, Avaliacoes, CriarAvaliacao, Gerenciaveis, Avaliacao, ObjetoAvaliacao } from './components'
 
 import './App.css'
 
@@ -50,7 +50,7 @@ class App extends Component {
             <Route path="avaliacoes/:avaliacaoId" component={Avaliacao} onEnter={redirectLogin}/>
             <Route path="avaliacoes/:avaliacaoId/objetoAvaliacao/:objetoAvaliacaoId" component={ObjetoAvaliacao} onEnter={redirectLogin}/>
             <Route path="criar-avaliacao" component={CriarAvaliacao} onEnter={redirectLogin}/>
-            <Route path="indicadores" component={Indicadores} onEnter={redirectLogin}/>
+            <Route path="gerenciaveis" component={Gerenciaveis} onEnter={redirectLogin}/>
             <Route path="/*" component={FourOFourClass}/>
           </Router>
         </Provider>

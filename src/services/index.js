@@ -5,5 +5,12 @@ export { ItemService } from './Item'
 export { AvaliacaoService } from './Avaliacao'
 export { ObjetoAvaliacaoService } from './ObjetoAvaliacao'
 export { NotaService } from './Nota'
+export { PilarService } from './Pilar'
+export { TipoService } from './Tipo'
+export { NivelService } from './Nivel'
+export { SubnivelService } from './Subnivel'
+export { PontuacaoService } from './Pontuacao'
+export { NormaService } from './Norma'
+export { CriterioLegalService } from './CriterioLegal'
 
 

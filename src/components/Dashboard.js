@@ -29,8 +29,8 @@ export class Dashboard extends Component {
                     </LinkContainer>
                   </Col>
                   <Col xs={12} md={4}>
-                    <LinkContainer to="indicadores">
-                      <Button bsStyle="primary" bsSize="large" block>Gerenciar Indicadores</Button>
+                    <LinkContainer to="gerenciaveis">
+                      <Button bsStyle="primary" bsSize="large" block>Painel Gerencial</Button>
                     </LinkContainer>
                   </Col>
                 </Row>

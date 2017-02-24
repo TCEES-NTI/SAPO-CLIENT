@@ -18,5 +18,14 @@ export const NotaService = {
         }
         return res
       })
-  }
+  },
+  getPopulatedCsv (token, id) {
+    return FetchApi(`populate/objetoAvaliacao/${id}/nota/csv`, {}, 'GET', token)
+      .then((res) => {
+        if (!res.length) {
+          throw new Error('Não há token ou não existem indicadores')
+        }
+        return res
+      })
+  },
 }

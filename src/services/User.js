@@ -23,5 +23,20 @@ export const UserService = {
         }
         return res
       })
+  },
+  getAll (token) {
+    return FetchApi('username', {}, 'GET', token)
+      .then((res) => {
+        if (!res.length) {
+          throw new Error('Não há token ou não existem indicadores')
+        }
+        return res.map(user => {
+          return {
+            _id: user._id,
+            nome: user.name,
+            username: user.username
+          }
+        })
+      })
   }
 }

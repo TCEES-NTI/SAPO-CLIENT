@@ -156,7 +156,10 @@ class ObjetoAvaliacaoClass extends Component {
       if (nota.item._id.toString() === e.target.getAttribute("data-key")) {
         if (nota.pontuacao !== e.target.value) {
           nota.pontuacao = e.target.value
-          NotaService.setNota(this.props.token, nota._id, Object.assign({}, nota, { item: nota.item._id}))
+          NotaService.setNota(this.props.token, nota._id, Object.assign({}, nota, { 
+            item: nota.item._id.toString(),
+            objetoAvaliacao: nota.objetoAvaliacao._id.toString()
+          }))
             .then((res) => console.log(res))
             .catch((err) => console.log(err))
         }
@@ -166,13 +169,25 @@ class ObjetoAvaliacaoClass extends Component {
     return this.setState({ notas: notas })
   }
 
+  getNomeAvaliacao = () => {
+    if ( this.state.notas.length ) {
+      return (
+        <h3>Objeto Avaliação > {this.state.notas[0].objetoAvaliacao.entidade.nome}</h3>
+      )
+    } else {
+      return (
+        <h3>Objeto Avaliação > Carregando</h3>
+      )
+    }
+  }
+
   render() {
     return (
       <div className="Login">
         <NavbBar/>
         <div className="content">
           <header>
-            <h1>Objeto Avaliação</h1>
+             { this.getNomeAvaliacao() }
           </header>
           <section>
             <Row>

@@ -40,8 +40,8 @@ class NavbBarClass extends Component {
               <LinkContainer to="/criar-avaliacao">
                 <NavItem eventKey={3}>Criar Avaliação</NavItem>
               </LinkContainer>
-              <LinkContainer to="/indicadores">
-                <NavItem eventKey={4}>Indicadores</NavItem>
+              <LinkContainer to="/gerenciaveis">
+                <NavItem eventKey={4}>Painel Gerencial</NavItem>
               </LinkContainer>
             </Nav>
             <Nav pullRight>

@@ -2,18 +2,22 @@ import React, { Component } from 'react'
 import { NavbBar } from './'
 import { } from 'react-bootstrap';
 import { connect } from 'react-redux'
-import { AvaliacaoService } from '../services'
+import { AvaliacaoService, ObjetoAvaliacaoService } from '../services'
 import { Button, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { browserHistory } from 'react-router'
+import { saveData } from '../utils/DataExport'
 
 const style = {
   tenPercent : {
-    width: '10%',
+    width: '15%',
     'textAlign': 'center' 
   },
   twentyPercent : {
     width: '20%'
+  },
+  'margin-left': {
+    marginLeft: '5px'
   }
 }
 
@@ -37,8 +41,13 @@ class AvaliacoesClass extends Component {
       .catch((err) => console.log(err))
   }
 
-  setNavigate = (avaliacao) => {
-    browserHistory.replace(`/avaliacoes/${avaliacao._id}`)
+  exportAvaliacao = (id) => {
+    
+    ObjetoAvaliacaoService.getPopulatedCsv(this.props.token, id)
+      .then(res => {
+        saveData(res, 'avaliacao.csv')
+      })
+      .catch(err => console.log(err))
   }
 
   render() {
@@ -69,9 +78,15 @@ class AvaliacoesClass extends Component {
                       <td>{avaliacao.nome}</td>
                       <td style={style.twentyPercent}>{avaliacao.dataInicio}</td>
                       <td style={style.tenPercent}>
-                        <LinkContainer to={`/avaliacoes/${avaliacao._id}`}>
-                          <Button bsStyle="primary">Editar</Button>
+                        <LinkContainer to={`/avaliacoes/${avaliacao._id}`} style={style['margin-left']}>
+                          <Button bsStyle="primary">Avaliar</Button>
                         </LinkContainer>
+                        <Button 
+                          bsStyle="warning" 
+                          style={style['margin-left']} 
+                          onClick={(e) => this.exportAvaliacao(avaliacao._id)}>
+                          Exportar
+                        </Button>
                       </td>
                     </tr>
                   )

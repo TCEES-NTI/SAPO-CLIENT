@@ -1,8 +1,8 @@
 import { FetchApi } from '../utils/FetchApi'
 
-export const ObjetoAvaliacaoService = {
-  getPopulated (token, id) {
-    return FetchApi(`populate/avaliacao/${id}/objetoAvaliacao`, {}, 'GET', token)
+export const TipoService = {
+  getAll (token) {
+    return FetchApi('tipo', {}, 'GET', token)
       .then((res) => {
         if (!res.length) {
           throw new Error('Não há token ou não existem indicadores')
@@ -10,13 +10,13 @@ export const ObjetoAvaliacaoService = {
         return res
       })
   },
-  getPopulatedCsv (token, id) {
-    return FetchApi(`populate/avaliacao/${id}/objetoAvaliacao/csv`, {}, 'GET', token)
+  getAllWithParents (token) {
+    return FetchApi('populate/parent/tipo', {}, 'GET', token)
       .then((res) => {
         if (!res.length) {
           throw new Error('Não há token ou não existem indicadores')
         }
-        return res
+        return res.map(tipo => Object.assign(tipo, {pai: tipo.pilar.nome}))
       })
-  },
+  }
 }

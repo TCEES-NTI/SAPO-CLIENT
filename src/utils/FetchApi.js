@@ -12,7 +12,7 @@ export function FetchApi (url, payload, method, token) {
     method: method,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Accept' : 'application/json'
+      'Accept' : 'application/json; text/html; charset=utf-8'
     }
   }
 
@@ -25,8 +25,8 @@ export function FetchApi (url, payload, method, token) {
   }
   return fetch(config.apiUrl + url, requestPayload)
     .then((res) => {
-      setTimeout(() => null, 0);
-      return res.json()
+      setTimeout(() => null, 0)
+      return res.url.indexOf('csv') !== -1 ? res.text() : res.json()
     })
     .then((res) => {
       if (res.message === 'Token has expired, please login again.') {
