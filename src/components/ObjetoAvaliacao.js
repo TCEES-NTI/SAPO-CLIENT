@@ -3,7 +3,7 @@ import { NavbBar } from './'
 import { } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import { NotaService } from '../services'
-import { Grid, Row, Col, Table, FormGroup, FormControl} from 'react-bootstrap'
+import { Grid, Row, Col, Table, FormGroup, FormControl, InputGroup} from 'react-bootstrap'
 import { } from 'react-router-bootstrap'
 import { } from 'react-router'
 import { Treebeard, decorators } from 'react-treebeard'
@@ -119,7 +119,8 @@ class ObjetoAvaliacaoClass extends Component {
       notas: [],
       loading: false,
       data: {},
-      displayableItens: []
+      displayableItens: [],
+      originalDisplayableItens: []
     }
   }
 
@@ -147,6 +148,7 @@ class ObjetoAvaliacaoClass extends Component {
     }
     this.setState({ cursor: node });
     if (node.type === 'subnivel') {
+      this.setState({ originalDisplayableItens: node.itens })
       this.setState({ displayableItens: node.itens })
     }
   }
@@ -181,6 +183,14 @@ class ObjetoAvaliacaoClass extends Component {
     }
   }
 
+  filterItens = (e) => {
+    let itens = this.state.originalDisplayableItens.filter((itemObj) => {
+      return itemObj.item.nome.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 
+      || itemObj.item.exigencia.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+    })
+    this.setState({ displayableItens: itens })
+  }
+
   render() {
     return (
       <div className="Login">
@@ -201,6 +211,14 @@ class ObjetoAvaliacaoClass extends Component {
                   />
                 </Col>
                 <Col md={9}>
+                  <form>
+                    <FormGroup>
+                      <InputGroup>
+                        <InputGroup.Addon>Filtrar :</InputGroup.Addon>
+                        <FormControl type="text" onChange={this.filterItens}/>
+                      </InputGroup>
+                    </FormGroup>
+                  </form>
                   <Table>
                     <thead>
                       <tr>
